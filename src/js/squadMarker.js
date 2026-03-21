@@ -33,6 +33,7 @@ export const squadMarker = Marker.extend({
         this.on("dragend", this._handleDragEnd, this);
     },
 
+
     /**
      * Force a given event to stay inside the map bounds
      * @param {event} [event] - event
@@ -113,6 +114,7 @@ export const squadWeaponMarker = squadMarker.extend({
             autoPan: false,
             className: "circles",
         };
+
 
 
         this.angleType = App.activeWeapon.angleType;
@@ -571,7 +573,7 @@ export const squadStratMarker = squadMarker.extend({
         this.category = options.category;
         this.icontype = options.icontype;
         this.options2 = options;
-
+        this.altHeldOnDragStart = false;
       
         this.posPopUpOptions = {
             autoPan: false,
@@ -591,6 +593,7 @@ export const squadStratMarker = squadMarker.extend({
             fillOpacity: 0,
             weight: options.circles2Weight || 3,
             autoPan: false,
+            className: "circles",
         };
         this.minDistCircleOn = {
             radius: options.circles1Size || 0,
@@ -599,6 +602,7 @@ export const squadStratMarker = squadMarker.extend({
             fillOpacity: 0,
             weight: options.circles1Weight || 4,
             autoPan: false,
+            className: "circles",
         };
         
 
@@ -619,18 +623,23 @@ export const squadStratMarker = squadMarker.extend({
 
 
         // Custom events handlers
-        //this.on("click", this._handleClick, this);
         this.on("drag", this._handleDrag, this);
         this.on("dragStart", this._handleDragStart, this);
         this.on("dragEnd", this._handleDragEnd, this);
         this.on("mouseover", this._handleMouseOver, this);
         this.on("mouseout", this._handleMouseOut, this);
+        this.on("click", this._handleClick, this);
+        this.on("dblclick", this._handleDblclick, this);
         this.on("contextmenu", this._handleContextMenu, this);
+        this.on("pointerdown", this._handlePointerDown, this);
     },
+
 
     updateIconSize: function () {
         const markerSizeSetting = App.userSettings.markerSize;
-        const iconSizeValue = 20 + (markerSizeSetting - 1) * 5;
+        let iconSizeValue = 20 + (markerSizeSetting - 1) * 5;
+        if (this.icontype === "deployable_hab")  iconSizeValue *= 1.2;
+
         const newIcon = new Icon({
             iconUrl: this.options2.icon.options.iconUrl,
             iconSize: [iconSizeValue, iconSizeValue],
@@ -639,6 +648,18 @@ export const squadStratMarker = squadMarker.extend({
         });
         this.setIcon(newIcon);
     },
+
+    // Catch this events so user can't place a target by mistake while trying move the strat marker
+    _handleClick: function(){},
+    _handleDblclick: function(){},
+
+    
+    // Detect if Alt key was held on drag start
+    // Passed to _handleDragStart to create a copy of the marker
+    _handlePointerDown: function(e) {
+        this.altHeldOnDragStart = e.originalEvent.altKey;
+    },
+
 
     /**
      * Remove the contextmenu marker and every object tied
@@ -668,11 +689,13 @@ export const squadStratMarker = squadMarker.extend({
         this.remove();
     },
 
+
     _handleContextMenu: function() {
         // Avoid other target keeping fading
         clearTimeout(this.mouseOverTimeout);    
         this.delete();
     },
+
 
     _handleDrag: function (event) {
         event = this.keepOnMap(event);
@@ -680,15 +703,22 @@ export const squadStratMarker = squadMarker.extend({
         if (this.options.circles1Size) this.constructionRange.setLatLng(event.latlng); 
         if (this.options.circles2Size) this.exclusionRange.setLatLng(event.latlng);
         this.posPopUp.setLatLng(event.latlng);
-        this.posPopUp.setContent(this.map.getKP(-event.latlng.lat, event.latlng.lng, 4)); 
+        this.posPopUp.setContent(this.map.getKP(-event.latlng.lat, event.latlng.lng, 4));
     },
 
+
     _handleDragStart: function () {
+
+        if (this.altHeldOnDragStart) {
+            let newLatLng = {lat: this._latlng.lat, lng: this._latlng.lng};
+            App.minimap.createMarker(newLatLng, this.team, this.category, this.icontype);
+        }
 
         this.map.mouseLocationPopup.close();
         this.map.off("mousemove", this.map._handleMouseMove);
         this.posPopUp.openOn(this.map);
     },
+
 
     _handleDragEnd: function () {
 

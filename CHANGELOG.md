@@ -1,8 +1,76 @@
+# <img src="https://img.shields.io/badge/-minor%20release-cd6f68?style=for-the-badge"> **42.4.0** *(2026-03-08)*
+
+</br><img src="https://img.shields.io/badge/-bug%20fixes-b22">  
+- Fixed flags not appearing in AAS when joining an existing session (fix [#448](https://github.com/sh4rkman/SquadCalc/issues/448))
+- Fixed HAB icons not having the correct size when imported from a file (fix [#451](https://github.com/sh4rkman/SquadCalc/issues/451), thanks Panda !)
+- Unselecting a server now properly remove `&server=xxx` from the URL (fix [#452](https://github.com/sh4rkman/SquadCalc/issues/452),)
+
+
+</br></br><!-- CHANGELOG SPLIT MARKER -->
+
+
+# <img src="https://img.shields.io/badge/-minor%20release-cd6f68?style=for-the-badge"> **42.3.0** *(2026-02-28)*
+
+</br><img src="https://img.shields.io/badge/-new%20features-green">  
+- The **Factions & Units panel** now shows units’ special characteristics (thanks to C-BoT-AU, fixes [#444](https://github.com/sh4rkman/SquadCalc/issues/444)).
+- When synced with a server, the server is now included in the URL. This allows you to bookmark your favorite server, for example: https://squadcalc.app/?server=29812439 (thanks to C-BoT-AU, fixes [#443](https://github.com/sh4rkman/SquadCalc/issues/443)).
+
+
+</br><img src="https://img.shields.io/badge/-bug%20fixes-b22">  
+- Fixed a bug when syncing a map with a server that changed map since last time the browser was refreshed  
+- Fixed a bug where modded server could be selected
+- Added missing vehicles icon for open top APC's (fix [#445](https://github.com/sh4rkman/SquadCalc/issues/445))
+- Fixed some lists and tooltips not translating when switch languages on factions menu (fix [#418](https://github.com/sh4rkman/SquadCalc/issues/418))
+
+</br></br><!-- CHANGELOG SPLIT MARKER -->
+
+
+# <img src="https://img.shields.io/badge/-minor%20release-cd6f68?style=for-the-badge"> **42.2.0** *(2026-02-17)*
+
+</br><img src="https://img.shields.io/badge/-new%20features-green">  
+- The right-click menu now supports multiple new icon colors (thanks to BL4CK for the SVGs!)
+- Added 10.3 new layers
+- Added 10.3 PLA Vehicle images
+- Added 10.3 new Unit icons
+
+</br><img src="https://img.shields.io/badge/-%20improv%20-orange"> 
+- Syncing with a server now avoid refreshing the map/layer if already on the right one
+
+
+
+</br></br><!-- CHANGELOG SPLIT MARKER -->
+
+
+# <img src="https://img.shields.io/badge/-minor%20release-cd6f68?style=for-the-badge"> **42.1.0** *(2026-01-31)*
+
+</br><img src="https://img.shields.io/badge/-new%20features-green">  
+- You can now mark a server as favorite ⭐, making it appear top of the servers lists at any time *(thanks Matador)*
+- You can now duplicate a map marker holding `Alt` while dragging it *(thanks Karasiq)*
+- Added 4 more colors to drawing tools *(thanks Snowflake)*
+- Added tunnels on terrain map layer for Black Coast, Skorpo and Fallujah *(thanks pickletrack)*
+
+</br><img src="https://img.shields.io/badge/-%20improv%20-orange"> 
+- Improved teams collumn to be more compact in Server Browser
+- Added a placeholder flag for unknown units in Server Browser
+
+</br><img src="https://img.shields.io/badge/-bug%20fixes-b22">  
+- Fixed toast icons being stretched on small screens
+- Fixed AAS flags losing their border when focused by a mouse click (fix [#432](https://github.com/sh4rkman/SquadCalc/issues/432))
+- Fixed shape context menu staying open when main menu close
+- Fixed mouse cursor behaviour when using right clic context menu (fix [#427](https://github.com/sh4rkman/SquadCalc/issues/427))
+- Fixed a bug in server browser where the list was repopulating when sorting a collumn (fix [#433](https://github.com/sh4rkman/SquadCalc/issues/433))
+- Fixed some markers that were blocking the mouseover on shapes
+
+
+</br></br><!-- CHANGELOG SPLIT MARKER -->
+
 
 # <img src="https://img.shields.io/badge/-minor%20release-cd6f68?style=for-the-badge"> **42.0.5** *(2026-01-17)*
 
 </br><img src="https://img.shields.io/badge/-bug%20fixes-b22">  
 - M1O-120-RTF1 now use milliradians as intended (Thanks Sh1nS0u_!)
+
+</br></br><!-- CHANGELOG SPLIT MARKER -->
 
 # <img src="https://img.shields.io/badge/-minor%20release-cd6f68?style=for-the-badge"> **42.0.4** *(2026-01-14)*
 
