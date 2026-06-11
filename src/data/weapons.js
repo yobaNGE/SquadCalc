@@ -218,6 +218,7 @@ export var WEAPONS = [{
      */
     /*
      * SuperMod
+     * https://steamcommunity.com/sharedfiles/filedetails/?id=3293347373
      */
     {
         name: "MO120RTF1",
@@ -227,6 +228,7 @@ export var WEAPONS = [{
         minElevation: [45, 85.3],
         unit: "mil",
         type: "modded",
+        mod: "SuperMod",
         angleType: "high",
         elevationPrecision: 0,
         heightOffset: 3,
@@ -234,7 +236,7 @@ export var WEAPONS = [{
         shells: [{
             name: "MO-SHORT",
             velocity: 110,
-            moa: 50,
+            moa: 30,
             minDistance: 0,
             explosionDamage: 500,
             explosionRadius: [2, 60],
@@ -243,7 +245,7 @@ export var WEAPONS = [{
         }, {
             name: "MO-MEDIUM",
             velocity: 143.5,
-            moa: 50,
+            moa: 30,
             minDistance: 0,
             explosionDamage: 500,
             explosionRadius: [2, 60],
@@ -252,15 +254,75 @@ export var WEAPONS = [{
         }, {
             name: "MO-LONG",
             velocity: 171.5,
-            moa: 50,
+            moa: 30,
             minDistance: 0,
             explosionDamage: 500,
             explosionRadius: [2, 60],
             explosionDistanceFromImpact: 1,
             damageFallOff: 7,
         }]
+    }, {
+        name: "type_63",
+        deceleration: 0,
+        decelerationTime: 0,
+        gravityScale: 2,
+        minElevation: [-20, 55],
+        unit: "deg",
+        type: "modded",
+        mod: "SuperMod",
+        angleType: "low",
+        elevationPrecision: 1,
+        heightOffset: 3,
+        angleOffset: 0,
+        shells: [{
+            name: "default",
+            minDistance: 0.5,
+            velocity: 300,
+            moa: 300,
+            explosionDamage: 250,
+            explosionRadius: [2, 10],
+            explosionDistanceFromImpact: 2,
+            damageFallOff: 1,
+        }]
+    }, /*
+     * INFINITE WAREFARE
+     * https://steamcommunity.com/sharedfiles/filedetails/?id=3405835668
+     */
+    {
+        name: "PZL07",
+        deceleration: 0,
+        decelerationTime: 0,
+        gravityScale: 1,
+        minElevation: [-90, 90],
+        unit: "deg",
+        type: "modded",
+        mod: "InfiniteWarefare",
+        angleType: "low",
+        elevationPrecision: 1,
+        heightOffset: 2,
+        angleOffset: 0,
+        shells: [{
+            name: "High-Explosive",
+            minDistance: 0,
+            velocity: 140,
+            moa: 40,
+            explosionDamage: 375,
+            explosionRadius: [1.5, 10],
+            explosionDistanceFromImpact: 0.5,
+            damageFallOff: 3.5,
+        }, {
+            name: "Air-Burst",
+            minDistance: 0,
+            velocity: 140,
+            moa: 40,
+            explosionDamage: 100,
+            explosionRadius: [10, 60],
+            explosionDistanceFromImpact: 10,
+            damageFallOff: 1.3,
+        }]
     }, /*
      * Steel Division
+     * https://steamcommunity.com/sharedfiles/filedetails/?l=french&id=2432926361
      */
     {
         name: "M109",
@@ -270,6 +332,7 @@ export var WEAPONS = [{
         minElevation: [-45, 135],
         unit: "deg",
         type: "modded",
+        mod: "SteelDivision",
         angleType: "low",
         elevationPrecision: 2,
         heightOffset: 1.75,
@@ -292,6 +355,7 @@ export var WEAPONS = [{
         minElevation: [5, 89],
         unit: "deg",
         type: "modded",
+        mod: "SteelDivision",
         angleType: "low",
         elevationPrecision: 2,
         heightOffset: 1.8951,  // Yaw swivel height from ground (HellCannon_Swivel Z-offset + deployable base)
@@ -327,6 +391,7 @@ export var WEAPONS = [{
         minElevation: [-45, 135],
         unit: "deg",
         type: "modded",
+        mod: "SteelDivision",
         angleType: "low",
         elevationPrecision: 1,
         heightOffset: 4.9,
@@ -360,6 +425,7 @@ export var WEAPONS = [{
         unit: "deg",
         logoCannonPos: "60%",
         type: "modded",
+        mod: "SteelDivision",
         angleType: "low",
         elevationPrecision: 2,
         heightOffset: 1.5,
@@ -392,6 +458,7 @@ export var WEAPONS = [{
         unit: "deg",
         logoCannonPos: "60%",
         type: "modded",
+        mod: "SteelDivision",
         angleType: "low",
         elevationPrecision: 1,
         heightOffset: 3,
@@ -414,6 +481,7 @@ export var WEAPONS = [{
         minElevation: [10, 85],
         unit: "deg",
         type: "modded",
+        mod: "SteelDivision",
         angleType: "high",
         elevationPrecision: 1,
         heightOffset: 1.9646,  // ZU23_BaseSocket (180.958) + HellCannon_Swivel (15.505) cm
@@ -443,6 +511,7 @@ export var WEAPONS = [{
         }]
     }, /*
      * Squad AdminTools
+     * https://steamcommunity.com/sharedfiles/filedetails/?id=3193475024
      */
     {
         name: "MTLB_FAB500",
@@ -452,6 +521,7 @@ export var WEAPONS = [{
         minElevation: [-45, 85.3],
         unit: "deg",
         type: "modded",
+        mod: "SquadAdminTools",
         angleType: "low",
         elevationPrecision: 1,
         heightOffset: 3,

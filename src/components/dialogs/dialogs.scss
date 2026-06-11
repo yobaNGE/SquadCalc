@@ -13,7 +13,7 @@ dialog {
     max-width: 700px;
     overflow: visible;
     &#factionsDialog {
-        max-width: 1600px;
+        max-width: 1680px;
         max-height: 100%;
         width: 100%;
         height: 100%;
@@ -33,6 +33,7 @@ dialog {
         font-size: 1.7em;
         right: 8px;
         top: 8px;
+        z-index: 100;
         background-color: transparent;
         transition: all 0.4s ease-in-out;
         cursor: pointer;
@@ -165,6 +166,7 @@ dialog {
     button {
         height: 20px;
         color: variables.$mainBGColor;
+        background-color: white;
         width: 45%;
         cursor: pointer;
         &.active {

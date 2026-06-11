@@ -18,6 +18,15 @@ export const MAPS = [
                 size: [4081, 4081],
                 scale: [1, 1, 1],
                 BWlevels: [291, 873],
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 4001,
+                rows: 4001,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -35,6 +44,15 @@ export const MAPS = [
                 size: [4081, 4081],
                 scale: [0.75, 0.75, 0.45],
                 BWlevels: [1825, 6640]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 3061,
+                rows: 3061,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -52,6 +70,15 @@ export const MAPS = [
                 size: [4033, 4033],
                 scale: [1, 1, 1],
                 BWlevels: [0, 2360]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 3905,
+                rows: 3906,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -69,6 +96,15 @@ export const MAPS = [
                 size: [4065, 4065],
                 scale: [1.003937, 1.003937, 0.8],
                 BWlevels: [2593, 7712]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 4599,
+                rows: 4600,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -86,6 +122,15 @@ export const MAPS = [
                 size: [8129, 4827],
                 scale: [0.5, 0.5, 4],
                 BWlevels: [1209, 1369]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 4065,
+                rows: 4065,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -103,6 +148,15 @@ export const MAPS = [
                 size: [4081, 4081],
                 scale: [1, 1, 1],
                 BWlevels: [39, 440]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 3006,
+                rows: 3006,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -120,6 +174,15 @@ export const MAPS = [
                 size: [2806, 2806],
                 scale: [1, 1, 3.2],
                 BWlevels: [0, 675]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 1775,
+                rows: 1775,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -137,6 +200,15 @@ export const MAPS = [
                 size: [4065, 4065],
                 scale: [1, 1, 0.40],
                 BWlevels: [0, 5516]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 4032,
+                rows: 4032,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -154,6 +226,15 @@ export const MAPS = [
                 size: [4065, 4065],
                 scale: [1, 1, 10],
                 BWlevels: [750, 950]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 4065,
+                rows: 4065,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -171,6 +252,15 @@ export const MAPS = [
                 size: [4081, 4081],
                 scale: [1, 1, 1],
                 BWlevels: [4643, 5595]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 4009,
+                rows: 4009,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -188,6 +278,15 @@ export const MAPS = [
                 size: [4032, 4032],
                 scale: [1, 1, 1],
                 BWlevels: [1349, 3241]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 4033,
+                rows: 4033,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -205,6 +304,15 @@ export const MAPS = [
                 size: [4033, 4033],
                 scale: [1, 1, 1.35],
                 BWlevels: [5437, 6846]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 4033,
+                rows: 4033,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -222,6 +330,15 @@ export const MAPS = [
                 size: [4065, 4065],
                 scale: [1, 1, 0.75],
                 BWlevels: [0, 9775]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "rgb16",
+                cols: 4618,
+                rows: 4618,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -239,6 +356,15 @@ export const MAPS = [
                 size: [6097, 7367],
                 scale: [0.5, 0.5, 1],
                 BWlevels: [100, 264]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 2497,
+                rows: 2497,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -256,6 +382,15 @@ export const MAPS = [
                 size: [4336, 4336],
                 scale: [1, 1, 1.5],
                 BWlevels: [5006, 6887]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 4335,
+                rows: 4335,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -273,6 +408,15 @@ export const MAPS = [
                 size: [2773, 1891],
                 scale: [1, 1, 0.5],
                 BWlevels: [6188, 8903]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 1762,
+                rows: 1762,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -290,6 +434,15 @@ export const MAPS = [
                 size: [4065, 4065],
                 scale: [1, 1, 3],
                 BWlevels: [2479, 5898]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 4032,
+                rows: 4032,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -307,6 +460,15 @@ export const MAPS = [
                 size: [3061, 2551],
                 scale: [1, 1, 1.2],
                 BWlevels: [2479, 5898]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 2401,
+                rows: 2401,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -324,6 +486,15 @@ export const MAPS = [
                 size: [4081, 4081],
                 scale: [1, 1, 0.3],
                 BWlevels: [4326, 6683]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 2756,
+                rows: 2756,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -341,6 +512,15 @@ export const MAPS = [
                 size: [4033, 4033],
                 scale: [1, 1, 1],
                 BWlevels: [4940, 5523]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 2801,
+                rows: 2801,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -375,6 +555,15 @@ export const MAPS = [
                 size: [4033, 4033],
                 scale: [1, 1, 0.28],
                 BWlevels: [410, 9643]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 4033,
+                rows: 4033,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -392,6 +581,15 @@ export const MAPS = [
                 size: [4081, 4081],
                 scale: [1, 1, 1],
                 BWlevels: [1349, 3241]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 4601,
+                rows: 4601,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -414,6 +612,15 @@ export const MAPS = [
                 size: [7113, 5081],
                 scale: [1.2, 1.2, 3.5],
                 BWlevels: [952, 4074]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "rgb16",
+                cols: 6850,
+                rows: 6870,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -431,6 +638,15 @@ export const MAPS = [
                 size: [1427, 1055],
                 scale: [1, 1, 0.75],
                 BWlevels: [1375, 1854]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 1301,
+                rows: 1301,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -448,6 +664,15 @@ export const MAPS = [
                 size: [4573, 4573],
                 scale: [1, 1, 1.25],
                 BWlevels: [3689, 4111]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 4681,
+                rows: 4681,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },
@@ -465,6 +690,15 @@ export const MAPS = [
                 size: [6351, 6351],
                 scale: [1, 1, 4],
                 BWlevels: [0, 833]
+            },
+            heightmapPng: {
+                file: "heightmap.png",
+                encoding: "gray8",
+                cols: 6351,
+                rows: 6351,
+                minHeightM: 0,
+                precisionM: 1,
+                downsample: 1,
             }
         }
     },

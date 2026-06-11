@@ -2,14 +2,13 @@
     "squad": "SQUAD",
     "calc": "CALC",
     "squadcalc": "SquadCalc",
-    "desc": "A Complete Mortar Calculator and map lane finder for SQUAD !",
-    "weaponInf": "Weapon Informations",
-        "name": "Name",
+    "desc": "The Ultimate In-Game Companion for Squad!",
         "range": "Range",
         "velocity": "Velocity",
         "moa": "MOA",
-        "100radius": "100 DAMAGE RADIUS",
-        "25radius": "25 DAMAGE RADIUS",
+        "explosionDamage": "Explosion Damage",
+        "explosionDamage100Radius": "100 DAMAGE RADIUS",
+        "explosionDamage25Radius": "25 DAMAGE RADIUS",
         "angle": "Angle",
         "high": "high",
         "low": "low",
@@ -75,5 +74,6 @@
     "load": "Load",
     "next": "Next",
     "playTime": "Play Time",
-    "mapSyncedwith": "Map Synced with"
+    "mapSyncedwith": "Map Synced with",
+    "favServers": "Server"
 }

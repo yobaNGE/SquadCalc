@@ -119,8 +119,10 @@ export default class SquadServersBrowser {
      * Fetches the list of servers from the API and stores it in `this.serversData`.
      */
     async getServers() {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 10000);
         try {
-            const response = await fetch(`${process.env.API_URL}/get/servers`);
+            const response = await fetch(`${process.env.API_URL}/get/servers`, { signal: controller.signal });
             const data = await response.json();
             this.serversData = data.servers;
 
@@ -145,6 +147,8 @@ export default class SquadServersBrowser {
 
         } catch (error) {
             console.error("Error fetching server data:", error);
+        } finally {
+            clearTimeout(timeout);
         }
     }
 
@@ -252,6 +256,7 @@ export default class SquadServersBrowser {
             this.favorites.add(serverId);
         }
         this.saveFavorites();
+        $(document).trigger("favorites:changed", [{ favorites: this.favorites, servers: this.serversData }]);
     }
 
 
@@ -371,9 +376,9 @@ export default class SquadServersBrowser {
                 rows += `
                     <tr class="${isSelected} ${unavailable}" data-serverid="${server.id}">
                         <td class="favoriteCell">${favoriteStarHTML}</td>
-                        <td title="${server.attributes.name}">${server.attributes.name}</td>
+                        <td title="${App.sanitize(server.attributes.name)}"><div class="server-name">${App.sanitize(server.attributes.name)}</div></td>
                         <td class="mapdata">
-                            ${server.attributes.details.map}<br>
+                            ${App.sanitize(server.attributes.details.map)}<br>
                             ${nextLayer}<br>
                             <span class="nextMap">${i18next.t("playTime", { ns: "common" })}: ${playTime}</span>
                         </td>
@@ -478,15 +483,13 @@ export default class SquadServersBrowser {
         const clickedElement = $(event.target);
         if (clickedElement.closest(".favorite-btn").length) return;
 
-        const url = new URL(window.location);
-
         if (row.hasClass("selected")) {
             row.removeClass("selected");
             $("#servers").removeClass("active");
             this.selectedServer = null;
 
-            url.searchParams.delete("server");
-            window.history.replaceState({}, "", url);
+            App.updateUrlParams({ server: null });
+            App.SERVER_SELECTOR.val("").trigger("change.select2");
 
             if (this.syncInterval) {
                 clearInterval(this.syncInterval);
@@ -502,8 +505,8 @@ export default class SquadServersBrowser {
         row.addClass("selected");
         $("#servers").addClass("active");
 
-        url.searchParams.set("server", server.id);
-        window.history.replaceState({}, "", url);
+        App.updateUrlParams({ server: server.id });
+        App.SERVER_SELECTOR.val(server.id).trigger("change.select2");
 
         this.selectedServer = server.id;
         this.selectedLayer = server.attributes.details.map;
@@ -589,8 +592,7 @@ export default class SquadServersBrowser {
      * @param {string} unit1
      * @param {string} unit2
      */
-    switchLayer(serverName, mapName, layerIndex, team1, team2, unit1, unit2){
-
+    switchLayer(serverName, mapName, layerIndex, team1, team2, unit1, unit2) {
         if (!mapName || !serverName || !layerIndex) return;
 
         const mapIndex = MAPS.findIndex(m => m.name.toLowerCase() === mapName.toLowerCase());
@@ -598,43 +600,49 @@ export default class SquadServersBrowser {
 
         const currentMapIndex = parseInt(App.MAP_SELECTOR.val());
         const currentLayerIndex = App.LAYER_SELECTOR.val();
-        const syncFactions = () => {
-            if (team1 && team2) {
-                App.FACTION1_SELECTOR.val(team1).trigger($.Event("change", { broadcast: true }));
-                App.FACTION2_SELECTOR.val(team2).trigger($.Event("change", { broadcast: true }));
-                if (unit1 && unit2) {
-                    App.UNIT1_SELECTOR.val(unit1).trigger($.Event("change", { broadcast: true }));
-                    App.UNIT2_SELECTOR.val(unit2).trigger($.Event("change", { broadcast: true }));
-                }
-            }
-        };
 
-        if (currentMapIndex === mapIndex && currentLayerIndex === layerIndex) {
-            syncFactions();
-            $("#serversInformation")[0].close();
+        const applyFactions = () => {
+            if (team1 && team2) {
+                App.FACTION1_SELECTOR.val(team1).trigger($.Event("change", { broadcast: false }));
+                App.FACTION2_SELECTOR.val(team2).trigger($.Event("change", { broadcast: false }));
+                if (unit1 && unit2) {
+                    App.UNIT1_SELECTOR.val(unit1).trigger($.Event("change", { broadcast: false }));
+                    App.UNIT2_SELECTOR.val(unit2).trigger($.Event("change", { broadcast: false }));
+                }
+                App.updateUrlParams({ team1: null, team1unit: null, team2: null, team2unit: null });
+            }
             serverBrowserTooltips.hide();
             App.openToast("success", "mapUpdated", "");
+        };
+
+        const setLayerAndFactions = () => {
+            if (!App.LAYER_SELECTOR.find(`option[value="${layerIndex}"]`).length) {
+                $(document).one("layers:loaded", setLayerAndFactions);
+                return;
+            }
+            $(document).one("layer:loaded", applyFactions);
+            App.LAYER_SELECTOR.val(layerIndex).trigger($.Event("change", { broadcast: true }));
+        };
+
+        $("#serversInformation")[0].close();
+
+        if (currentMapIndex === mapIndex && currentLayerIndex === layerIndex) {
+            applyFactions();
             return;
         }
 
         if (currentMapIndex !== mapIndex) {
-            $(document).one("layers:loaded", () => {
-                $(document).one("layer:loaded", () => {
-                    syncFactions();
-                });
-                App.LAYER_SELECTOR.val(layerIndex).trigger($.Event("change", { broadcast: true }));
-            });
+            $(document).one("layers:loaded", setLayerAndFactions);
             App.MAP_SELECTOR.val(mapIndex).trigger($.Event("change", { broadcast: true }));
-        } else {
-            $(document).one("layer:loaded", () => {
-                syncFactions();
-            });
-            App.LAYER_SELECTOR.val(layerIndex).trigger($.Event("change", { broadcast: true }));
+            return;
         }
 
-        $("#serversInformation")[0].close();
-        serverBrowserTooltips.hide();
-        App.openToast("success", "mapUpdated", "");
+        const layersReady = App.LAYER_SELECTOR.find("option[value]:not([value=''])").length > 0;
+        if (layersReady) {
+            setLayerAndFactions();
+        } else {
+            $(document).one("layers:loaded", setLayerAndFactions);
+        }
     }
 
 

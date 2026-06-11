@@ -183,17 +183,17 @@ export default class SquadFiringSolution {
         return bearing;
     }
 
-    
+
     /**
      * Calculates the horizontal distance a projectile will travel given a launch angle,
      * initial velocity, and vertical height difference between origin and target.
-     * 
+     *
      * This function solves the vertical motion equation using the quadratic formula
      * to find the total flight time (t) required to reach the specified height difference.
      * It then uses that time to compute the horizontal distance.
-     * 
+     *
      * VERY imprecise at low angles and high heights diff
-     * 
+     *
      * @param {number} angle - Launch angle in degrees (from horizontal).
      * @returns {number} Horizontal distance the projectile will travel (in meters).
      */
@@ -231,7 +231,7 @@ export default class SquadFiringSolution {
      * @param {number} [timeOfFlight] - Time of flight in seconds
      * @returns {object} [semiMajorAxis, semiMinorAxis, ellipseAngle]
      */
-    getSpreadParameter(elevation, timeOfFlight){  
+    getSpreadParameter(elevation, timeOfFlight){
         return  {
             semiMajorAxis: this.getHorizontalSpread(timeOfFlight),
             semiMinorAxis: this.getVerticalSpread(elevation, this.velocity),
@@ -241,7 +241,7 @@ export default class SquadFiringSolution {
 
 
     /**
-     * Calculates the horizontal spread for a given trajectory path length 
+     * Calculates the horizontal spread for a given trajectory path length
      * @param {number} [timeOfFlight] - Time of flight in seconds
      * @returns {number} - Length of horizontal spread in meters
      */
@@ -320,7 +320,7 @@ export default class SquadFiringSolution {
     degToMil(deg){
         return deg / (360 / 6400);
     }
-    
+
     /**
      * Converts NATO mils into degrees
      * @param {number} mil - NATO mils

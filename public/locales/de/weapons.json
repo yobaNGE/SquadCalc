@@ -2,7 +2,7 @@
     "deployables": "Deployables",
         "Mortar": "81-mm-Mörser",
         "UB-32": "UB-32",
-        "HellCannon": "Höllenkanone",
+        "HellCannon": "HellCannon",
     "vehicles": "Fahrzeuge",
         "Tech.Mortar": "Tech. Mortar",
         "Tech.UB-32": "Tech. UB-32",
@@ -16,5 +16,6 @@
         "T62.DUMP.TRUCK": "T62 Dump Truck",
         "MTLB_FAB500": "MTLB БЕГЕМОТ",
         "HIMARS": "M142 HIMARS",
-        "TOS-1A": "TOS-1A"
+        "TOS-1A": "TOS-1A",
+        "type_63": "Type 63"
 }

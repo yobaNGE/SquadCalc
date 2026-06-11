@@ -2,14 +2,15 @@
     "squad": "SQUAD",
     "calc": "CALC",
     "squadcalc": "SquadCalc",
-    "desc": "多功能SQUAD迫击炮计算器",
+    "desc": "Squad 终极游戏内助手",
     "weaponInf": "武器信息",
         "name": "名称",
         "range": "射程",
         "velocity": "速度",
         "moa": "角分 (MOA)",
-        "100radius": "100 伤害半径",
-        "25radius": "25 伤害半径",
+        "explosionDamage": "爆炸伤害",
+        "explosionDamage100Radius": "100 伤害半径",
+        "explosionDamage25Radius": "25 伤害半径",
         "angle": "角度",
         "high": "高",
         "low": "低",
@@ -75,5 +76,6 @@
     "load": "加载",
     "next": "下一个",
     "playTime": "地图时间",
-    "mapSyncedwith": "地图已同步至"
+    "mapSyncedwith": "地图已同步至",
+    "favServers": "服务器"
 }

@@ -1,5 +1,7 @@
 import { animateCSS } from "./animations.js";
 import SquadFactions from "./squadFactions.js";
+import packageInfo from "../../package.json";
+
 
 /**
  * Centralized settings management for SquadCalc.
@@ -29,8 +31,11 @@ export default class SquadSettings {
         this.bindCheckboxes();
         this.bindSliders();
         this.bindLabelClicks();
+        this.loadButtonToggles();
+        this.bindButtonToggles();
         this.bindMenuButtons();
         this.applyInitialState();
+        $("#appVersion").text(`SquadCalc v${packageInfo.version}`);
     }
 
 
@@ -174,20 +179,22 @@ export default class SquadSettings {
                 key: "settings-enable-factions",
                 default: true,
                 selector: "#enableFactionsSettings",
-                controls: ["#hideLowRespawnSettings", "#disableSoundsSettings", "#defaultFactionsSettings"],
+                controls: ["#hideLowRespawnSettings", "#disableSoundsSettings", "#defaultFactionsSettings", "#minimizeFactionBarSettings"],
                 onChange: (val) => {
                     if (!val) {
-                        $("#factionsTab").hide();
+                        $("#factionsTab, #factionsButton").hide();
                         $("#hideLowRespawnSettings").prop("disabled", true);
                         $("#disableSoundsSettings").prop("disabled", true);
                         $("#defaultFactionsSettings").prop("disabled", true);
+                        $("#minimizeFactionBarSettings").prop("disabled", true);
                     } else {
                         $("#hideLowRespawnSettings").prop("disabled", false);
                         $("#disableSoundsSettings").prop("disabled", false);
                         $("#defaultFactionsSettings").prop("disabled", false);
+                        $("#minimizeFactionBarSettings").prop("disabled", false);
                         if (this.app.minimap.layer) {
                             this.app.minimap.layer.factions = new SquadFactions(this.app.minimap.layer);
-                            $("#factionsTab").show();
+                            $("#factionsTab, #factionsButton").show();
                         }
                     }
                 }
@@ -201,6 +208,17 @@ export default class SquadSettings {
                 key: "settings-disable-sounds",
                 default: false,
                 selector: "#disableSoundsSettings"
+            },
+            minimizeFactionBar: {
+                key: "settings-minimize-factionbar",
+                default: false,
+                selector: "#minimizeFactionBarSettings",
+                onLoad: (val) => {
+                    $("#factionsButton").toggleClass("collapsed", val);
+                },
+                onChange: (val) => {
+                    $("#factionsButton").toggleClass("collapsed", val);
+                }
             },
             hideLowRespawn: {
                 key: "settings-hide-lowrespawn",
@@ -518,7 +536,7 @@ export default class SquadSettings {
     loadSliders() {
         Object.entries(this.sliderDefinitions).forEach(([name, def]) => {
             const stored = localStorage.getItem(def.key);
-            
+
             if (stored === null || isNaN(stored) || stored === "") {
                 localStorage.setItem(def.key, def.default);
                 this[name] = def.default;
@@ -631,6 +649,7 @@ export default class SquadSettings {
             $("#hideLowRespawnSettings").prop("disabled", true);
             $("#disableSoundsSettings").prop("disabled", true);
             $("#defaultFactionsSettings").prop("disabled", true);
+            $("#minimizeFactionBarSettings").prop("disabled", true);
         }
 
         // Hide factions if disabled via environment
@@ -651,32 +670,101 @@ export default class SquadSettings {
         $("#map").css("filter", `brightness(${brightness}%) contrast(${contrast}%)`);
     }
 
+    getButtonToggleDefinitions() {
+        return [
+            { key: "settings-btn-layers",  sharedContainer: "#mapBtnLayers",  buttons: ".btn-topomap, .btn-terrainmap, .btn-basemap", default: true },
+            { key: "settings-btn-hd",      sharedContainer: null,             buttons: ".btn-hd",                                   default: true },
+            { key: "settings-btn-legacy",  sharedContainer: "#mapBtnMain",    buttons: ".btn-legacy",                                default: false },
+            { key: "settings-btn-helpmap", sharedContainer: "#mapBtnMain",    buttons: ".btn-helpmap",                               default: false },
+            { key: "settings-btn-focus",   sharedContainer: "#mapBtnMain",    buttons: ".btn-focus",                                 default: false },
+            { key: "settings-btn-servers", sharedContainer: "#mapBtnServers", buttons: "#servers",                                  default: true },
+            { key: "settings-btn-session", sharedContainer: "#mapBtnServers", buttons: ".btn-session",                              default: true },
+            { key: "settings-btn-share",   sharedContainer: "#mapBtnMain",    buttons: ".btn-share",                                default: false },
+            { key: "settings-btn-undo",        sharedContainer: "#mapBtnActions",     buttons: ".btn-undo",         default: true },
+            { key: "settings-btn-delete",      sharedContainer: "#mapBtnActions",     buttons: ".btn-delete",       default: true },
+            { key: "settings-btn-download",    sharedContainer: "#mapBtnMain",        buttons: ".btn-download",     default: false },
+            { key: "settings-btn-upload",      sharedContainer: "#mapBtnMain",        buttons: ".btn-upload",       default: false },
+        ];
+    }
+
+    _updateSharedContainer(containerSelector) {
+        if (!containerSelector) return;
+        const defs = this.getButtonToggleDefinitions().filter(d => d.sharedContainer === containerSelector);
+        const anyVisible = defs.some(d => !$(d.buttons).data("placeholder"));
+        $(containerSelector).toggle(anyVisible);
+    }
+
+    _updateDotsButton() {
+        const anyDemoted = this.getButtonToggleDefinitions().some(d =>
+            $(d.buttons).data("placeholder")
+        );
+        $("#mapBtnTools").toggle(anyDemoted);
+    }
+
+    _moveButtonsToMenu(def) {
+        const $dotsGroup = $("#mapBtnTools .btnLayersGroup");
+        $(def.buttons).each((_, el) => {
+            const $el = $(el);
+            const $placeholder = $("<span class=\"btn-placeholder\"></span>");
+            $el.before($placeholder);
+            $el.data("placeholder", $placeholder);
+            $dotsGroup.append($el);
+        });
+        this._updateSharedContainer(def.sharedContainer);
+        this._updateDotsButton();
+    }
+
+    _restoreButtons(def) {
+        $(def.buttons).each((_, el) => {
+            const $el = $(el);
+            const $placeholder = $el.data("placeholder");
+            if ($placeholder && $placeholder.length) {
+                $placeholder.before($el);
+                $placeholder.remove();
+            }
+            $el.removeData("placeholder");
+        });
+        this._updateSharedContainer(def.sharedContainer);
+        this._updateDotsButton();
+    }
+
+    loadButtonToggles() {
+        this.getButtonToggleDefinitions().forEach(def => {
+            const stored = localStorage.getItem(def.key);
+            const val = stored === null ? def.default : stored === "1";
+            if (!val) this._moveButtonsToMenu(def);
+            $(`.mapBtnToggle[data-key="${def.key}"]`).toggleClass("active", val);
+        });
+        this._updateDotsButton();
+    }
+
+    bindButtonToggles() {
+        $(".mapBtnToggle").on("click", (e) => {
+            const btn = $(e.currentTarget);
+            const key = btn.data("key");
+            const def = this.getButtonToggleDefinitions().find(d => d.key === key);
+            if (!def) return;
+
+            const newVal = !btn.hasClass("active");
+            btn.toggleClass("active", newVal);
+            localStorage.setItem(key, newVal ? 1 : 0);
+            animateCSS(btn, "headShake");
+
+            if (newVal) {
+                this._restoreButtons(def);
+            } else {
+                this._moveButtonsToMenu(def);
+            }
+        });
+    }
+
     /**
-     * Bind menu button events (footer menu open/close, help dialog)
+     * Bind settings button event (switch to map mode from legacy)
      */
     bindMenuButtons() {
-        // Open/close footer menu
-        $(document).on("click", "#fabCheckbox4", () => {
-            const footerButtons = document.getElementById("footerButtons");
-            if (!footerButtons.classList.contains("expanded")) {
-                footerButtons.classList.add("expanded");
-                $(".fab4").html("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 640 640\"><path d=\"M183.1 137.4C170.6 124.9 150.3 124.9 137.8 137.4C125.3 149.9 125.3 170.2 137.8 182.7L275.2 320L137.9 457.4C125.4 469.9 125.4 490.2 137.9 502.7C150.4 515.2 170.7 515.2 183.2 502.7L320.5 365.3L457.9 502.6C470.4 515.1 490.7 515.1 503.2 502.6C515.7 490.1 515.7 469.8 503.2 457.3L365.8 320L503.1 182.6C515.6 170.1 515.6 149.8 503.1 137.3C490.6 124.8 470.3 124.8 457.8 137.3L320.5 274.7L183.1 137.4z\"/></svg>");
-            } else {
-                this.app.closeMenu();
-            }
-
-            // Close menu when clicking outside
-            document.addEventListener("click", (e) => {
-                if (footerButtons.classList.contains("expanded") && !footerButtons.contains(e.target)) {
-                    this.app.closeMenu();
-                }
-            });
-        });
-
-        // Open help dialog
-        $(document).on("click", "#fabCheckbox", () => {
-            $("#helpDialog")[0].showModal();
-            this.app.closeMenu();
+        $(document).on("click", ".returnBtn", (event) => {
+            event.preventDefault();
+            this.app.switchUI();
         });
     }
 
@@ -707,5 +795,14 @@ export default class SquadSettings {
      */
     get(name) {
         return this[name];
+    }
+
+    isModEnabled(modKey) {
+        const stored = localStorage.getItem(`settings-mod-${modKey}`);
+        return stored === null ? true : stored === "1";
+    }
+
+    setModEnabled(modKey, enabled) {
+        localStorage.setItem(`settings-mod-${modKey}`, +enabled);
     }
 }
