@@ -10,7 +10,7 @@ Example for Yehorivka:
 
 ```powershell
 python tools\heightmap_json_to_png.py `
-  D:\DownLoads\Yehorivka\heightmap.json `
+  C:\Users\recum\Desktop\UE_tools\heightmaps_1m_fullres\yehorivka\heightmap.json `
   public\img\maps\yehorivka\heightmap.png `
   --precision-m 1 `
   --format auto `

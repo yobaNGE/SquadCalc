@@ -13,6 +13,7 @@ export default class SquadServersBrowser {
         this.selectedServer = null;
         this.selectedLayer = null;
         this.refreshInterval = 20; // seconds
+        this.moddedPrefixes = ["SD_", "CAF_", "MEE_", "CUSTOM_"];
         this.favorites = this.loadFavorites();
     }
 
@@ -22,18 +23,79 @@ export default class SquadServersBrowser {
 
 
     /**
+     * Checks if a layer is supported (either vanilla or known modded prefix)
+     * @param {string} layerName - The layer name to check
+     * @returns {boolean} - True if supported, false otherwise
+     */
+    isSupportedLayer(layerName) {
+        if (!layerName) return false;
+
+        // All valid layer names should look like Map_Mode_v1.
+        if (!layerName.includes("_")) return false;
+
+        for (const prefix of this.moddedPrefixes) {
+            if (layerName.startsWith(prefix)) {
+                return true;
+            }
+        }
+
+        const firstPart = layerName.split("_")[0];
+        const isLikelyModPrefix = firstPart.length >= 2 && firstPart.length <= 8 && firstPart === firstPart.toUpperCase();
+        if (isLikelyModPrefix) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+    /**
+     * Parses a mod layer name and extracts a map name and both factions when API data is incomplete.
+     * @param {object} server - The server object from the API
+     * @returns {{ mapName: string|null, team1: string|null, team2: string|null }}
+     */
+    parseModLayer(server) {
+        const layerName = server.attributes.details.map;
+
+        if (!this.isSupportedLayer(layerName)) {
+            return { mapName: null, team1: null, team2: null };
+        }
+
+        let cleanLayerName = layerName;
+        for (const prefix of this.moddedPrefixes) {
+            if (layerName.startsWith(prefix)) {
+                cleanLayerName = layerName.substring(prefix.length);
+                break;
+            }
+        }
+
+        const parts = cleanLayerName.split("_");
+        const mapName = parts[0] || null;
+
+        const team1Raw = server.attributes.details.squad_teamOne;
+        const team2Raw = server.attributes.details.squad_teamTwo;
+
+        const team1 = team1Raw ? team1Raw.split("_")[0] : null;
+        const team2 = team2Raw ? team2Raw.split("_")[0] : null;
+
+        return { mapName, team1, team2 };
+    }
+
+
+    /**
      * Syncs the selected server's state:
      * - Updates `selectedLayer` if the server's current map changes
      * - Switches map, layer, factions, and units to match the server
      */
     async syncWithServer(){
+
         if (!this.selectedServer) return;
         await this.getServers();
         if (!this.serversData) return;
 
         this.serversData.forEach(server => {
             if (server.id == this.selectedServer) {
-                let playTime = this.toMinSec(server.attributes.details.squad_playTime);
+                const playTime = this.toMinSec(server.attributes.details.squad_playTime || 0);
                 console.debug(`${server.attributes.name} - ${server.attributes.details.map} - playtime : ${playTime}`);
                 if (server.attributes.details.map != this.selectedLayer) {
                     console.debug(`  LAYER CHANGED FROM ${this.selectedLayer} to ${server.attributes.details.map}`);
@@ -64,12 +126,22 @@ export default class SquadServersBrowser {
             const data = await response.json();
             this.serversData = data.servers;
 
-            // Initiate fuse index
+            // Recover map/faction data for supported modded layers when the API omits it.
+            this.serversData.forEach(server => {
+                if (!server.mapName || !server.team1 || !server.team2) {
+                    const modData = this.parseModLayer(server);
+                    if (modData.mapName) {
+                        server.mapName = server.mapName || modData.mapName;
+                        server.team1 = server.team1 || modData.team1;
+                        server.team2 = server.team2 || modData.team2;
+                    }
+                }
+            });
+
             this.fuse = new Fuse(this.serversData, {
                 includeScore: true,
                 threshold: 0.4,
                 distance: 500,
-                //minMatchCharLength: 3,
                 keys: ["attributes.name", "attributes.details.map"]
             });
 
@@ -95,7 +167,7 @@ export default class SquadServersBrowser {
         await this.getServers();
         this.renderTable(this.serversData);
 
-        // Trigger custom event
+        // Trigger custom event.
         $(document).trigger("servers:loaded");
     }
 
@@ -111,7 +183,7 @@ export default class SquadServersBrowser {
         const searchInput = document.getElementById("serverSearch");
         tbody.innerHTML = `
             <tr>
-                <td colspan="6" style="text-align: center; padding: 40px;">
+                <td colspan="5" style="text-align: center; padding: 40px;">
                     <p>${i18next.t("loadingServers", { ns: "common" })}</p>
                 </td>
             </tr>
@@ -211,8 +283,7 @@ export default class SquadServersBrowser {
 
         const serverId = btn.dataset.serverid;
         this.toggleFavorite(serverId);
-        
-        // Update the button appearance
+
         btn.classList.toggle("favorited");
         const path = btn.querySelector(".star-icon path");
         const isFav = btn.classList.contains("favorited");
@@ -241,29 +312,14 @@ export default class SquadServersBrowser {
                 <span class="nextMap" data-i18n="common:next">
                     ${i18next.t("next", { ns: "common" })}: ${server.attributes.details.squad_nextLayer}
                 </span>
-                `;
-        } 
+            `;
+        }
         return "<span class=\"nextMap\">Map Voting</span>";
     }
 
 
     /**
-     * Returns the players HTML for a server.
-     * @param {number|null} players
-     * @param {number|null} maxPlayers
-     * @returns {string}
-     */
-    getPlayersHTML(players, maxPlayers) {
-        if (players != null && maxPlayers != null) {
-            return `${players} / ${maxPlayers}`;
-        } else {
-            return "-";
-        }
-    }
-
-
-    /**
-     * Returns the flag icon HTML for a team
+     * Returns the flag icon HTML for a team.
      * @param {string|null} team
      * @param {string} label
      * @returns {string}
@@ -271,9 +327,27 @@ export default class SquadServersBrowser {
     getTeamHTML(team, label) {
         if (team) {
             return `<img title="${label}" src="/img/flags/${team}.webp" alt="${team}" class="flag-icon">`;
-        } else {
-            return `<img title="${label}" src="/img/flags/unknown.webp" alt="Unknown" class="flag-icon">`;
         }
+        return `<img title="${label}" src="/img/flags/unknown.webp" alt="Unknown" class="flag-icon">`;
+    }
+
+
+    /**
+     * Returns the player count HTML with queue info.
+     * Format: currentPlayers/maxPlayers (+queueCount)
+     * @param {object} server - The server object from the API
+     * @returns {string}
+     */
+    getPlayerCountHTML(server) {
+        const players = server.attributes.players || 0;
+        const maxPlayers = server.attributes.maxPlayers || 0;
+        const queue = server.attributes.details.squad_publicQueue || 0;
+
+        let html = `${players}/${maxPlayers}`;
+        if (queue > 0) {
+            html += ` <span class="queue-count">(+${queue})</span>`;
+        }
+        return html;
     }
 
 
@@ -284,29 +358,31 @@ export default class SquadServersBrowser {
     renderRows(servers){
         const tbody = document.getElementById("serversTableBody");
         let rows = "";
-        
+
         if (servers && servers.length > 0) {
-            // Sort favorites to top
             const sortedServers = [...servers].sort((a, b) => {
                 const aIsFav = this.isFavorite(a.id) ? 1 : 0;
                 const bIsFav = this.isFavorite(b.id) ? 1 : 0;
-                return bIsFav - aIsFav; // Favorites first
+                return bIsFav - aIsFav;
             });
-            
+
             sortedServers.forEach(server => {
                 const isSelected = server.id == this.selectedServer ? "selected" : "";
                 const unavailable = (!server.team1 || !server.team2 || !server.mapName) ? "unavailable" : "";
                 const favoriteStarHTML = this.getFavoriteStarHTML(server.id);
                 const nextLayer = this.getNextLayerHTML(server);
+                const playTime = this.toMinSec(server.attributes.details.squad_playTime || 0);
+
                 rows += `
                     <tr class="${isSelected} ${unavailable}" data-serverid="${server.id}">
                         <td class="favoriteCell">${favoriteStarHTML}</td>
                         <td title="${App.sanitize(server.attributes.name)}"><div class="server-name">${App.sanitize(server.attributes.name)}</div></td>
                         <td class="mapdata">
                             ${App.sanitize(server.attributes.details.map)}<br>
-                            ${nextLayer}
+                            ${nextLayer}<br>
+                            <span class="nextMap">${i18next.t("playTime", { ns: "common" })}: ${playTime}</span>
                         </td>
-                        <td>${this.getPlayersHTML(server.attributes.players, server.attributes.maxPlayers)}</td>
+                        <td>${this.getPlayerCountHTML(server)}</td>
                         <td class="teamFlags">
                             ${this.getTeamHTML(server.team1, server.attributes.details.squad_teamOne)}
                             ${this.getTeamHTML(server.team2, server.attributes.details.squad_teamTwo)}
@@ -317,11 +393,11 @@ export default class SquadServersBrowser {
         } else {
             rows = `
                 <tr>
-                    <td colspan="6" style="text-align: center; padding: 40px;">
+                    <td colspan="5" style="text-align: center; padding: 40px;">
                         ${i18next.t("noServersFound", { ns: "common" })}
                     </td>
                 </tr>
-                `;
+            `;
         }
         tbody.innerHTML = rows;
     }
@@ -340,9 +416,9 @@ export default class SquadServersBrowser {
                             <circle cx="11" cy="11" r="8"></circle>
                             <path d="m21 21-4.35-4.35"></path>
                         </svg>
-                        <input 
-                            type="text" 
-                            class="search-input" 
+                        <input
+                            type="text"
+                            class="search-input"
                             data-i18n-placeholder="common:searchServerPlaceholder"
                             placeholder="${i18next.t("searchServerPlaceholder", { ns: "common" })}"
                             id="serverSearch"
@@ -365,13 +441,13 @@ export default class SquadServersBrowser {
                         <tr>
                             <th class="favoriteHeader"></th>
                             <th class="sortable" data-sort="name" data-i18n="common:serverName">
-                                ${i18next.t("serverName", { ns: "common" })} <span class="sort-indicator">⇅</span>
+                                ${i18next.t("serverName", { ns: "common" })} <span class="sort-indicator">^v</span>
                             </th>
                             <th class="sortable" data-sort="map" data-i18n="common:currentMap">
-                                ${i18next.t("currentMap", { ns: "common" })} <span class="sort-indicator">⇅</span>
+                                ${i18next.t("currentMap", { ns: "common" })} <span class="sort-indicator">^v</span>
                             </th>
-                            <th data-i18n="common:players">
-                                ${i18next.t("players", { ns: "common" })}
+                            <th class="sortable" data-sort="players" data-i18n="common:players">
+                                ${i18next.t("players", { ns: "common" })} <span class="sort-indicator">^v</span>
                             </th>
                             <th data-i18n="common:teams">
                                 ${i18next.t("teams", { ns: "common" })}
@@ -396,29 +472,25 @@ export default class SquadServersBrowser {
      * - Updates the active server and layer
      * - Starts or stops automatic syncing
      * - Switches the map/layer/factions/units to match the selected server
-     * @param {jQuery<HTMLElement>} row - The clicked table row as a jQuery object.
+     * @param {jQuery<HTMLElement>} row - The clicked table row as a jQuery object
+     * @param {Event} event
      */
     handleRowClicks(row, event) {
 
-        // Ignore disabled rows
         if (!row || row.hasClass("unavailable")) return;
-
-        // Ignore clicks on header rows
         if (row.closest("thead").length) return;
 
-        // Ignore clicks on favorite button - check the actual clicked element
         const clickedElement = $(event.target);
         if (clickedElement.closest(".favorite-btn").length) return;
 
-        // --- UNSELECT ---
         if (row.hasClass("selected")) {
             row.removeClass("selected");
             $("#servers").removeClass("active");
             this.selectedServer = null;
+
             App.updateUrlParams({ server: null });
             App.SERVER_SELECTOR.val("").trigger("change.select2");
 
-            // stop sync
             if (this.syncInterval) {
                 clearInterval(this.syncInterval);
                 this.syncInterval = null;
@@ -426,26 +498,22 @@ export default class SquadServersBrowser {
             return;
         }
 
-        // --- SELECT ---
+        const server = this.serversData.find(s => s.id == row.data("serverid"));
+        if (!server) return;
+
         $(".servers-table tr").removeClass("selected");
         row.addClass("selected");
         $("#servers").addClass("active");
 
-        // Retrieve fresh data from the serversData array in case it has changed since rendering
-        const server = this.serversData.find(s => s.id == row.data("serverid"));
-
         App.updateUrlParams({ server: server.id });
         App.SERVER_SELECTOR.val(server.id).trigger("change.select2");
 
-        // Update the selected server and layer
         this.selectedServer = server.id;
         this.selectedLayer = server.attributes.details.map;
 
-        // start sync every X seconds
         if (this.syncInterval) clearInterval(this.syncInterval);
         this.syncInterval = setInterval(() => this.syncWithServer(), this.refreshInterval * 1000);
 
-        // switch layer immediately
         this.switchLayer(
             server.attributes.name,
             server.mapName,
@@ -458,63 +526,59 @@ export default class SquadServersBrowser {
     }
 
 
-
     /**
      * Renders the full servers table with search, refresh, info buttons, and event listeners.
-     * @param {Array} servers - The array of server objects to display.
+     * @param {Array} servers - The array of server objects to display
      */
     renderTable(servers) {
         const serversList = document.getElementById("serversList");
 
-        // Load the HTML Table
         serversList.innerHTML = this.generateTableHTML();
 
-        // Rows Click Handler
-        $(".servers-table").on("click", "tr", (event) => { this.handleRowClicks($(event.currentTarget), event);});
+        $(".servers-table").on("click", "tr", (event) => {
+            this.handleRowClicks($(event.currentTarget), event);
+        });
 
-        // Favorite button click handler - use event delegation on the table
         $(".servers-table").on("click", ".favorite-btn", (event) => {
             event.stopPropagation();
             this.handleFavoriteClick(event);
         });
 
-        // Search input listener
         const searchInput = document.getElementById("serverSearch");
-        if (searchInput) searchInput.addEventListener("input", (e) => { this.filterServers(e.target.value);});
+        if (searchInput) {
+            searchInput.addEventListener("input", (e) => {
+                this.filterServers(e.target.value);
+            });
+        }
 
-        // Refresh Button listener
         const refreshBtn = document.getElementById("refreshBtn");
-        if (refreshBtn) refreshBtn.addEventListener("click", () => { this.refreshRows(); });
+        if (refreshBtn) {
+            refreshBtn.addEventListener("click", () => {
+                this.refreshRows();
+            });
+        }
 
-        // Sortable headers
         const sortableHeaders = serversList.querySelectorAll("th[data-sort]");
         sortableHeaders.forEach(header => {
             header.addEventListener("click", () => {
                 const column = header.getAttribute("data-sort");
-
-                // Get sort direction ("asc" or "desc")
                 const direction = this.sortTable(column);
 
-                // Reset all headers
                 sortableHeaders.forEach(h => {
                     h.classList.remove("sorted");
                     const indicator = h.querySelector(".sort-indicator");
-                    if (indicator) indicator.textContent = "⇅";
+                    if (indicator) indicator.textContent = "^v";
                 });
 
-                // Apply style + arrow to clicked header
                 header.classList.add("sorted");
                 const indicator = header.querySelector(".sort-indicator");
-                if (indicator) indicator.textContent = direction === "asc" ? "▲" : "▼";
-                
+                if (indicator) indicator.textContent = direction === "asc" ? "^" : "v";
             });
         });
 
         this.renderRows(servers);
 
-        // Focus search input at the end
         if (searchInput) searchInput.focus();
-        
     }
 
 
@@ -532,6 +596,8 @@ export default class SquadServersBrowser {
         if (!mapName || !serverName || !layerIndex) return;
 
         const mapIndex = MAPS.findIndex(m => m.name.toLowerCase() === mapName.toLowerCase());
+        if (mapIndex < 0) return;
+
         const currentMapIndex = parseInt(App.MAP_SELECTOR.val());
         const currentLayerIndex = App.LAYER_SELECTOR.val();
 
@@ -543,7 +609,6 @@ export default class SquadServersBrowser {
                     App.UNIT1_SELECTOR.val(unit1).trigger($.Event("change", { broadcast: false }));
                     App.UNIT2_SELECTOR.val(unit2).trigger($.Event("change", { broadcast: false }));
                 }
-                // Strip any team params that default faction loading may have written
                 App.updateUrlParams({ team1: null, team1unit: null, team2: null, team2unit: null });
             }
             serverBrowserTooltips.hide();
@@ -555,26 +620,23 @@ export default class SquadServersBrowser {
                 $(document).one("layers:loaded", setLayerAndFactions);
                 return;
             }
-            App.LAYER_SELECTOR.val(layerIndex).trigger($.Event("change", { broadcast: true }));
             $(document).one("layer:loaded", applyFactions);
+            App.LAYER_SELECTOR.val(layerIndex).trigger($.Event("change", { broadcast: true }));
         };
 
         $("#serversInformation")[0].close();
 
-        // Already on the right map and layer — factions only
         if (currentMapIndex === mapIndex && currentLayerIndex === layerIndex) {
             applyFactions();
             return;
         }
 
-        // Map needs to change — loadLayers() fires layers:loaded
         if (currentMapIndex !== mapIndex) {
-            App.MAP_SELECTOR.val(mapIndex).trigger($.Event("change", { broadcast: true }));
             $(document).one("layers:loaded", setLayerAndFactions);
+            App.MAP_SELECTOR.val(mapIndex).trigger($.Event("change", { broadcast: true }));
             return;
         }
 
-        // Same map, different layer
         const layersReady = App.LAYER_SELECTOR.find("option[value]:not([value=''])").length > 0;
         if (layersReady) {
             setLayerAndFactions();
@@ -592,16 +654,16 @@ export default class SquadServersBrowser {
     sortTable(column) {
         if (!this.serversData) return;
 
-        let sortOrder = this.currentSort === column && this.sortAscending ? -1 : 1;
+        const sortOrder = this.currentSort === column && this.sortAscending ? -1 : 1;
         const direction = sortOrder === 1 ? "asc" : "desc";
         this.sortAscending = !this.sortAscending;
         this.currentSort = column;
 
-        // Sort from the current filteredData, or full dataset if empty
         const baseData = this.filteredData !== null ? this.filteredData : [...this.serversData];
 
         const sorted = [...baseData].sort((a, b) => {
-            let valA, valB;
+            let valA;
+            let valB;
 
             switch (column) {
             case "name":
@@ -615,6 +677,14 @@ export default class SquadServersBrowser {
             case "players":
                 valA = a.attributes.players;
                 valB = b.attributes.players;
+                if (valA === valB) {
+                    valA = a.attributes.details.squad_publicQueue || 0;
+                    valB = b.attributes.details.squad_publicQueue || 0;
+                }
+                break;
+            case "playtime":
+                valA = a.attributes.details.squad_playTime || 0;
+                valB = b.attributes.details.squad_playTime || 0;
                 break;
             default:
                 return 0;
@@ -633,8 +703,8 @@ export default class SquadServersBrowser {
 
     /**
      * Converts a time in seconds to "HH:MM:SS" format.
-     * @param {number} seconds - The total time in seconds.
-     * @returns {string} Formatted time as "HH:MM".
+     * @param {number} seconds - The total time in seconds
+     * @returns {string} Formatted time as "HH:MM"
      */
     toMinSec(seconds) {
         const h = Math.floor(seconds / 3600);
@@ -643,19 +713,4 @@ export default class SquadServersBrowser {
         if (h > 0) return `${h}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
         return `${m}:${s.toString().padStart(2, "0")}`;
     }
-
-
-    /**
-     * Converts a time in seconds to "HH:MM" format.
-     * @param {number} seconds - The total time in seconds.
-     * @returns {string} Formatted time as "HH:MM".
-     */
-    formatPlayTime(seconds) {
-        const totalMinutes = Math.floor(seconds / 60);
-        const h = Math.floor(totalMinutes / 60);
-        const m = totalMinutes % 60;
-
-        return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`;
-    }
-
 }

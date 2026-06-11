@@ -557,7 +557,9 @@ export default class SquadCalc {
                 weapon.heightOffset,
                 weapon.angleOffset,
                 weapon.projectileLifespan,
-                weapon.mod
+                weapon.mod,
+                weapon.muzzleOffset,
+                weapon.barrelLength
             );
         });
         

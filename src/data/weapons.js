@@ -1,222 +1,217 @@
 export const WEAPONSTYPE = ["deployables", "vehicles"];
 
-export var WEAPONS = [
-    {
-        name: "Mortar",
-        deceleration: 0,
-        decelerationTime: 0,
-        gravityScale: 1,
-        minElevation: [45, 88.875],
-        unit: "mil",
-        type: "deployables",
-        angleType: "high",
-        elevationPrecision: 0,
-        heightOffset: 1,
-        shells : [{
-            name: "default",
-            minDistance: 51,
-            velocity: 110,
-            moa: 50,
-            explosionDamage: 350,
-            explosionRadius: [0, 40],
-            explosionDistanceFromImpact: 1,
-            damageFallOff: 7,
-        }]
-    },
-    {
-        name: "UB-32",
-        deceleration: 50,
-        decelerationTime : 2,
-        gravityScale: 2,
-        minElevation: [-25, 35],
-        unit: "deg",
-        type: "deployables",
-        angleType: "low",
-        elevationPrecision: 1,
-        heightOffset: 1,
-        projectileLifespan: 20,
-        shells : [{
-            name: "default",
-            minDistance: 0,
-            velocity: 300,
-            moa: 300,
-            explosionDamage: 115,
-            explosionRadius: [5, 18],
-            explosionDistanceFromImpact: 0.2,
-            damageFallOff: 1,
-        }]
-    },
-    {
-        name: "HellCannon",
-        deceleration: 0,
-        decelerationTime : 0,
-        gravityScale: 1,
-        minElevation: [10, 90],
-        unit: "deg",
-        type: "deployables",
-        angleType: "high",
-        elevationPrecision: 1,
-        heightOffset: 1.5,
-        shells : [{
-            name: "default",
-            minDistance: 0,
-            velocity: 95,
-            moa: 100,
-            explosionDamage: 125,
-            explosionRadius: [1, 50],
-            explosionDistanceFromImpact: 2,
-            damageFallOff: 1,
-        }]
-    },
-    {
-        name: "Tech.Mortar",
-        deceleration: 0,
-        decelerationTime : 0,
-        gravityScale: 1,
-        minElevation: [-45, 135],
-        unit: "deg",
-        type: "vehicles",
-        angleType: "high",
-        elevationPrecision: 1,
-        heightOffset: 2.5,
-        angleOffset: 5,
-        shells : [{
-            name: "default",
-            minDistance: 51,
-            velocity: 110,
-            moa: 50,
-            explosionDamage: 350,
-            explosionRadius: [0, 40],
-            explosionDistanceFromImpact: 0.5,
-            damageFallOff: 7,
-        }]
-    },
-    {
-        name: "Tech.UB-32",
-        deceleration: 50,
-        decelerationTime : 2,
-        gravityScale: 2,
-        minElevation: [-45, 135],
-        unit: "deg",
-        type: "vehicles",
-        angleType: "low",
-        elevationPrecision: 1,
-        heightOffset: 2.5,
-        projectileLifespan: 20,
-        shells : [{
-            name: "default",
-            minDistance: 0,
-            velocity: 300,
-            moa: 300,
-            explosionDamage: 115,
-            explosionRadius: [5, 18],
-            explosionDistanceFromImpact: 0.2,
-            damageFallOff: 1,
-        }]
-    },
-    {
-        name: "BM-21Grad",
-        deceleration: 0,
-        decelerationTime : 0,
-        gravityScale: 2,
-        minElevation: [-45, 135],
-        unit: "deg",
-        type: "vehicles",
-        angleType: "low",
-        elevationPrecision: 1,
-        heightOffset: 3,
-        shells : [{
-            name: "default",
-            minDistance: 0,
-            velocity: 200,
-            moa: 200,
-            explosionDamage: 140,
-            explosionRadius: [1, 35],
-            explosionDistanceFromImpact: 2,
-            damageFallOff: 1,
-        }]
-    },
-    {
-        name: "M1064M121",
-        deceleration: 0,
-        decelerationTime : 0,
-        gravityScale: 1,
-        minElevation: [-45, 85.3],
-        unit: "deg",
-        type: "vehicles",
-        angleType: "high",
-        elevationPrecision: 1,
-        heightOffset: 3,
-        shells : [{
-            name: "impact",
-            velocity: 142,
-            minDistance: 340,
-            moa: 40,
-            explosionDamage: 400,
-            explosionRadius: [0, 40],
-            explosionDistanceFromImpact: 1,
-            damageFallOff: 7,
-        },
-        {
-            name: "nearSurface",
-            velocity: 142,
-            minDistance: 340,
-            moa: 50,
-            explosionDamage: 100,
-            explosionRadius: [10, 60],
-            explosionDistanceFromImpact: 10,
-            damageFallOff: 1.3,
-        }]
-    },
-    {
-        name: "Mk19",
-        deceleration: 0,
-        decelerationTime : 0,
-        gravityScale: 1,
-        minElevation: [-45, 85.3],
-        unit: "deg",
-        type: "vehicles",
-        angleType: "low",
-        elevationPrecision: 1,
-        heightOffset: 4,
-        angleOffset: 0.984,
-        projectileLifespan: 20,
-        shells : [{
-            name: "default",
-            minDistance: 10,
-            velocity: 230,
-            moa: 50,
-            explosionDamage: 115,
-            explosionRadius: [1, 15],
-            explosionDistanceFromImpact: 0.08,
-            damageFallOff: 1,
-        }]
-    },
-    {
-        name: "BTR4-AGS",  
-        deceleration: 0,
-        decelerationTime : 0,
-        gravityScale: 1,
-        minElevation: [-45, 135],
-        unit: "degMin",
-        type: "vehicles",
-        angleType: "low",
-        elevationPrecision: 1,
-        heightOffset: 3.4,
-        angleOffset: 0.73459689,
-        projectileLifespan: 20,
-        shells : [{
-            name: "default",
-            minDistance: 0,
-            velocity: 190,
-            moa: 15,
-            explosionDamage: 115,
-            explosionRadius: [1, 15],
-            explosionDistanceFromImpact: 1,
-            damageFallOff: 1,
-        }]
-    },
-    /*
+export var WEAPONS = [{
+    name: "Mortar",
+    deceleration: 0,
+    decelerationTime: 0,
+    gravityScale: 1,
+    minElevation: [45, 88.875],
+    unit: "mil",
+    type: "deployables",
+    angleType: "high",
+    elevationPrecision: 0,
+    heightOffset: 1,
+    angleOffset: 0,
+    shells: [{
+        name: "default",
+        minDistance: 51,
+        velocity: 110,
+        moa: 50,
+        explosionDamage: 350,
+        explosionRadius: [0, 40],
+        explosionDistanceFromImpact: 1,
+        damageFallOff: 7,
+    }]
+}, {
+    name: "UB-32",
+    deceleration: 50,
+    decelerationTime: 2,
+    gravityScale: 2,
+    minElevation: [-25, 35],
+    unit: "deg",
+    type: "deployables",
+    angleType: "low",
+    elevationPrecision: 1,
+    heightOffset: 1,
+    angleOffset: 0,
+    projectileLifespan: 20,
+    shells: [{
+        name: "default",
+        minDistance: 0,
+        velocity: 300,
+        moa: 300,
+        explosionDamage: 115,
+        explosionRadius: [5, 18],
+        explosionDistanceFromImpact: 0.2,
+        damageFallOff: 1,
+    }]
+}, {
+    name: "HellCannon",
+    deceleration: 0,
+    decelerationTime: 0,
+    gravityScale: 1,
+    minElevation: [10, 90],
+    unit: "deg",
+    type: "deployables",
+    angleType: "high",
+    elevationPrecision: 1,
+    heightOffset: 1.5,
+    angleOffset: 0,
+    shells: [{
+        name: "default",
+        minDistance: 0,
+        velocity: 95,
+        moa: 100,
+        explosionDamage: 125,
+        explosionRadius: [1, 50],
+        explosionDistanceFromImpact: 2,
+        damageFallOff: 1,
+    }]
+}, {
+    name: "Tech.Mortar",
+    deceleration: 0,
+    decelerationTime: 0,
+    gravityScale: 1,
+    minElevation: [-45, 135],
+    unit: "deg",
+    type: "vehicles",
+    angleType: "high",
+    elevationPrecision: 1,
+    heightOffset: 2.5,
+    angleOffset: 5,
+    shells: [{
+        name: "default",
+        minDistance: 51,
+        velocity: 110,
+        moa: 50,
+        explosionDamage: 350,
+        explosionRadius: [0, 40],
+        explosionDistanceFromImpact: 0.5,
+        damageFallOff: 7,
+    }]
+}, {
+    name: "Tech.UB-32",
+    deceleration: 50,
+    decelerationTime: 2,
+    gravityScale: 2,
+    minElevation: [-45, 135],
+    unit: "deg",
+    type: "vehicles",
+    angleType: "low",
+    elevationPrecision: 1,
+    heightOffset: 2.5,
+    angleOffset: 0,
+    projectileLifespan: 20,
+    shells: [{
+        name: "default",
+        minDistance: 0,
+        velocity: 300,
+        moa: 300,
+        explosionDamage: 115,
+        explosionRadius: [5, 18],
+        explosionDistanceFromImpact: 0.2,
+        damageFallOff: 1,
+    }]
+}, {
+    name: "BM-21Grad",
+    deceleration: 0,
+    decelerationTime: 0,
+    gravityScale: 2,
+    minElevation: [-45, 135],
+    unit: "deg",
+    type: "vehicles",
+    angleType: "low",
+    elevationPrecision: 1,
+    heightOffset: 3,
+    angleOffset: 0,
+    shells: [{
+        name: "default",
+        minDistance: 0,
+        velocity: 200,
+        moa: 200,
+        explosionDamage: 140,
+        explosionRadius: [1, 35],
+        explosionDistanceFromImpact: 2,
+        damageFallOff: 1,
+    }]
+}, {
+    name: "M1064M121",
+    deceleration: 0,
+    decelerationTime: 0,
+    gravityScale: 1,
+    minElevation: [-45, 85.3],
+    unit: "deg",
+    type: "vehicles",
+    angleType: "high",
+    elevationPrecision: 1,
+    heightOffset: 3,
+    angleOffset: 0,
+    shells: [{
+        name: "impact",
+        velocity: 142,
+        minDistance: 340,
+        moa: 40,
+        explosionDamage: 400,
+        explosionRadius: [0, 40],
+        explosionDistanceFromImpact: 1,
+        damageFallOff: 7,
+    }, {
+        name: "nearSurface",
+        velocity: 142,
+        minDistance: 340,
+        moa: 50,
+        explosionDamage: 100,
+        explosionRadius: [10, 60],
+        explosionDistanceFromImpact: 10,
+        damageFallOff: 1.3,
+    }]
+}, {
+    name: "Mk19",
+    deceleration: 0,
+    decelerationTime: 0,
+    gravityScale: 1,
+    minElevation: [-45, 85.3],
+    unit: "deg",
+    type: "vehicles",
+    angleType: "low",
+    elevationPrecision: 1,
+    heightOffset: 4,
+    angleOffset: 0.984,
+    projectileLifespan: 20,
+    shells: [{
+        name: "default",
+        minDistance: 10,
+        velocity: 230,
+        moa: 50,
+        explosionDamage: 115,
+        explosionRadius: [1, 15],
+        explosionDistanceFromImpact: 0.08,
+        damageFallOff: 1,
+    }]
+}, {
+    name: "BTR4-AGS",
+    deceleration: 0,
+    decelerationTime: 0,
+    gravityScale: 1,
+    minElevation: [-45, 135],
+    unit: "degMin",
+    type: "vehicles",
+    angleType: "low",
+    elevationPrecision: 1,
+    heightOffset: 3.4,
+    angleOffset: 0.73459689,
+    projectileLifespan: 20,
+    shells: [{
+        name: "default",
+        minDistance: 0,
+        velocity: 190,
+        moa: 15,
+        explosionDamage: 115,
+        explosionRadius: [1, 15],
+        explosionDistanceFromImpact: 1,
+        damageFallOff: 1,
+    }]
+}, /*
      *****************
      * MODDED WEAPONS
      *****************
@@ -228,7 +223,7 @@ export var WEAPONS = [
     {
         name: "MO120RTF1",
         deceleration: 0,
-        decelerationTime : 0,
+        decelerationTime: 0,
         gravityScale: 1,
         minElevation: [45, 85.3],
         unit: "mil",
@@ -237,7 +232,8 @@ export var WEAPONS = [
         angleType: "high",
         elevationPrecision: 0,
         heightOffset: 3,
-        shells : [{
+        angleOffset: 0,
+        shells: [{
             name: "MO-SHORT",
             velocity: 110,
             moa: 30,
@@ -246,8 +242,7 @@ export var WEAPONS = [
             explosionRadius: [2, 60],
             explosionDistanceFromImpact: 1,
             damageFallOff: 7,
-        }, 
-        {
+        }, {
             name: "MO-MEDIUM",
             velocity: 143.5,
             moa: 30,
@@ -256,8 +251,7 @@ export var WEAPONS = [
             explosionRadius: [2, 60],
             explosionDistanceFromImpact: 1,
             damageFallOff: 7,
-        },
-        {
+        }, {
             name: "MO-LONG",
             velocity: 171.5,
             moa: 30,
@@ -267,11 +261,10 @@ export var WEAPONS = [
             explosionDistanceFromImpact: 1,
             damageFallOff: 7,
         }]
-    },
-    {
+    }, {
         name: "type_63",
         deceleration: 0,
-        decelerationTime : 0,
+        decelerationTime: 0,
         gravityScale: 2,
         minElevation: [-20, 55],
         unit: "deg",
@@ -280,7 +273,8 @@ export var WEAPONS = [
         angleType: "low",
         elevationPrecision: 1,
         heightOffset: 3,
-        shells : [{
+        angleOffset: 0,
+        shells: [{
             name: "default",
             minDistance: 0.5,
             velocity: 300,
@@ -290,8 +284,7 @@ export var WEAPONS = [
             explosionDistanceFromImpact: 2,
             damageFallOff: 1,
         }]
-    },
-    /*
+    }, /*
      * INFINITE WAREFARE
      * https://steamcommunity.com/sharedfiles/filedetails/?id=3405835668
      */
@@ -308,29 +301,26 @@ export var WEAPONS = [
         elevationPrecision: 1,
         heightOffset: 2,
         angleOffset: 0,
-        shells: [
-            {
-                name: "High-Explosive",
-                minDistance: 0,
-                velocity: 140,
-                moa: 40,
-                explosionDamage: 375,
-                explosionRadius: [1.5, 10],
-                explosionDistanceFromImpact: 0.5,
-                damageFallOff: 3.5,
-            },
-            {
-                name: "Air-Burst",
-                minDistance: 0,
-                velocity: 140,
-                moa: 40,
-                explosionDamage: 100,
-                explosionRadius: [10, 60],
-                explosionDistanceFromImpact: 10,
-                damageFallOff: 1.3,
-            }]
-    },
-    /*
+        shells: [{
+            name: "High-Explosive",
+            minDistance: 0,
+            velocity: 140,
+            moa: 40,
+            explosionDamage: 375,
+            explosionRadius: [1.5, 10],
+            explosionDistanceFromImpact: 0.5,
+            damageFallOff: 3.5,
+        }, {
+            name: "Air-Burst",
+            minDistance: 0,
+            velocity: 140,
+            moa: 40,
+            explosionDamage: 100,
+            explosionRadius: [10, 60],
+            explosionDistanceFromImpact: 10,
+            damageFallOff: 1.3,
+        }]
+    }, /*
      * Steel Division
      * https://steamcommunity.com/sharedfiles/filedetails/?l=french&id=2432926361
      */
@@ -344,9 +334,10 @@ export var WEAPONS = [
         type: "modded",
         mod: "SteelDivision",
         angleType: "low",
-        elevationPrecision: 1,
-        heightOffset: 3,
-        shells : [{
+        elevationPrecision: 2,
+        heightOffset: 1.75,
+        angleOffset: 0,
+        shells: [{
             name: "default",
             minDistance: 0,
             velocity: 225,
@@ -356,20 +347,24 @@ export var WEAPONS = [
             explosionDistanceFromImpact: 1,
             damageFallOff: 3.5,
         }]
-    },
-    {
+    }, {
         name: "M777",
         deceleration: 0,
         decelerationTime: 0,
         gravityScale: 2,
-        minElevation: [15, 80],
+        minElevation: [5, 89],
         unit: "deg",
         type: "modded",
         mod: "SteelDivision",
         angleType: "low",
-        elevationPrecision: 1,
-        heightOffset: 4,
-        shells : [{
+        elevationPrecision: 2,
+        heightOffset: 1.8951,  // Yaw swivel height from ground (HellCannon_Swivel Z-offset + deployable base)
+        muzzleOffset: {
+            x: 5.1914,  // Perpendicular offset from pitch swivel to muzzle (affects bearing)
+            y: 7.4943,  // Forward offset along barrel direction (affected by elevation)
+            z: 0.0      // Vertical offset from pitch pivot at 0° elevation
+        },
+        shells: [{
             name: "default",
             minDistance: 700,
             velocity: 200,
@@ -378,9 +373,17 @@ export var WEAPONS = [
             explosionRadius: [40, 75],
             explosionDistanceFromImpact: 1,
             damageFallOff: 3.5,
+        }, {
+            name: "funny",
+            minDistance: 10,
+            velocity: 200,
+            moa: 1.5,
+            explosionDamage: 2000,
+            explosionRadius: [40, 75],
+            explosionDistanceFromImpact: 1,
+            damageFallOff: 3.5,
         }]
-    },
-    {
+    }, {
         name: "T62.DUMP.TRUCK",
         gravityScale: 2,
         deceleration: 0,
@@ -391,8 +394,10 @@ export var WEAPONS = [
         mod: "SteelDivision",
         angleType: "low",
         elevationPrecision: 1,
-        heightOffset: 3,
-        shells : [{
+        heightOffset: 4.9,
+        barrelLength: 5,
+        angleOffset: 0,
+        shells: [{
             name: "default",
             minDistance: 0,
             velocity: 210,
@@ -401,21 +406,31 @@ export var WEAPONS = [
             explosionRadius: [20, 40],
             explosionDistanceFromImpact: 1,
             damageFallOff: 1,
+        },{
+            name: "funny",
+            minDistance: 0,
+            velocity: 210,
+            moa: 1.5,
+            explosionDamage: 400,
+            explosionRadius: [20, 40],
+            explosionDistanceFromImpact: 1,
+            damageFallOff: 1,
         }]
-    },
-    {
+    }, {
         name: "HIMARS",
         gravityScale: 2,
         deceleration: 0,
         decelerationTime: 0,
         minElevation: [-3, 84.7],
         unit: "deg",
+        logoCannonPos: "60%",
         type: "modded",
         mod: "SteelDivision",
         angleType: "low",
-        elevationPrecision: 1,
-        heightOffset: 3,
-        shells : [{
+        elevationPrecision: 2,
+        heightOffset: 1.5,
+        angleOffset: 0,
+        shells: [{
             name: "default",
             minDistance: 0,
             velocity: 250,
@@ -424,21 +439,31 @@ export var WEAPONS = [
             explosionRadius: [1.5, 50],
             explosionDistanceFromImpact: 3,
             damageFallOff: 1,
+        }, {
+            name: "1.5",
+            minDistance: 0,
+            velocity: 250,
+            moa: 1.5,
+            explosionDamage: 300,
+            explosionRadius: [1.5, 50],
+            explosionDistanceFromImpact: 3,
+            damageFallOff: 1,
         }]
-    },
-    {
+    }, {
         name: "TOS-1A",
         deceleration: 0,
         decelerationTime: 0,
         gravityScale: 1,
         minElevation: [0, 80],
         unit: "deg",
+        logoCannonPos: "60%",
         type: "modded",
         mod: "SteelDivision",
         angleType: "low",
         elevationPrecision: 1,
         heightOffset: 3,
-        shells : [{
+        angleOffset: 0,
+        shells: [{
             name: "default",
             minDistance: 0,
             velocity: 100,
@@ -448,11 +473,10 @@ export var WEAPONS = [
             explosionDistanceFromImpact: 0.2,
             damageFallOff: 1,
         }]
-    },
-    {
+    }, {
         name: "Ural-HellCannon",
         deceleration: 0,
-        decelerationTime : 0,
+        decelerationTime: 0,
         gravityScale: 2,
         minElevation: [10, 85],
         unit: "deg",
@@ -460,8 +484,13 @@ export var WEAPONS = [
         mod: "SteelDivision",
         angleType: "high",
         elevationPrecision: 1,
-        heightOffset: 3,
-        shells : [{
+        heightOffset: 1.9646,  // ZU23_BaseSocket (180.958) + HellCannon_Swivel (15.505) cm
+        muzzleOffset: {
+            x: 0.0000046,  // Perpendicular offset from pitch swivel to muzzle (affects bearing)
+            y: 2.3735,     // Forward offset along barrel direction (affected by elevation)
+            z: 0.0021      // Vertical offset from pitch pivot at 0° elevation
+        },
+        shells: [{
             name: "default",
             minDistance: 0,
             velocity: 180,
@@ -470,16 +499,24 @@ export var WEAPONS = [
             explosionRadius: [1, 75],
             explosionDistanceFromImpact: 2,
             damageFallOff: 1,
+        }, {
+            name: "1.5",
+            minDistance: 0,
+            velocity: 180,
+            moa: 1.5,
+            explosionDamage: 300,
+            explosionRadius: [1, 75],
+            explosionDistanceFromImpact: 2,
+            damageFallOff: 1,
         }]
-    },
-    /*
+    }, /*
      * Squad AdminTools
      * https://steamcommunity.com/sharedfiles/filedetails/?id=3193475024
      */
     {
         name: "MTLB_FAB500",
         deceleration: 0,
-        decelerationTime : 0,
+        decelerationTime: 0,
         gravityScale: 1,
         minElevation: [-45, 85.3],
         unit: "deg",
@@ -488,7 +525,8 @@ export var WEAPONS = [
         angleType: "low",
         elevationPrecision: 1,
         heightOffset: 3,
-        shells : [{
+        angleOffset: 0,
+        shells: [{
             name: "default",
             minDistance: 75,
             velocity: 95,
@@ -498,5 +536,4 @@ export var WEAPONS = [
             explosionDistanceFromImpact: 2,
             damageFallOff: 4,
         }]
-    },
-];
+    },];
