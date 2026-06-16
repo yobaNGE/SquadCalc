@@ -352,16 +352,33 @@ export var WEAPONS = [{
         deceleration: 0,
         decelerationTime: 0,
         gravityScale: 2,
-        minElevation: [5, 89],
+        minElevation: [15, 80],
         unit: "deg",
         type: "modded",
         mod: "SteelDivision",
-        angleType: "low",
+        angleType: "high",
         elevationPrecision: 2,
-        heightOffset: 1.8951,  // Yaw swivel height from ground (HellCannon_Swivel Z-offset + deployable base)
+        heightOffset: 0,
+        geometry: {
+            displayRotationSource: "turretRef",
+            displayYawOffsetDeg: 0,
+            displayCameraOffsetMeters: {
+                lateral: -0.91872055,
+                forward: 0.24125175,
+                vertical: 1.07187744
+            },
+            // Attach_Muzzle in m777Barrel_Skeleton1, transformed through WeaponRoot -90 deg ref pose.
+            // UMG_M777_HUD displays GunMount pitch + 55, so this is reference-pose geometry at 55 deg.
+            launchOffsetMeters: {
+                lateral: 0,
+                forward: 5.191432,
+                vertical: 7.4943463,
+                referenceElevationDeg: 55
+            }
+        },
         muzzleOffset: {
-            x: 5.1914,  // Perpendicular offset from pitch swivel to muzzle (affects bearing)
-            y: 7.4943,  // Forward offset along barrel direction (affected by elevation)
+            x: 0,       // Legacy fallback: no bearing correction; muzzle is coaxial with displayed azimuth.
+            y: 5.1914,  // Attach_Muzzle reference-pose forward offset.
             z: 0.0      // Vertical offset from pitch pivot at 0° elevation
         },
         shells: [{

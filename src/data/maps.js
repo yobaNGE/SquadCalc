@@ -613,15 +613,15 @@ export const MAPS = [
                 scale: [1.2, 1.2, 3.5],
                 BWlevels: [952, 4074]
             },
-            heightmapPng: {
-                file: "heightmap.png",
-                encoding: "rgb16",
-                cols: 6850,
-                rows: 6870,
-                minHeightM: 0,
-                precisionM: 1,
-                downsample: 1,
-            }
+            // heightmapPng: {
+            //     file: "heightmap.png",
+            //     encoding: "rgb16",
+            //     cols: 6850,
+            //     rows: 6870,
+            //     minHeightM: 0,
+            //     precisionM: 1,
+            //     downsample: 1,
+            // } FIXME: Seems to be misaligned, needs a second look
         }
     },
     { 

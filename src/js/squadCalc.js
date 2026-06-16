@@ -262,9 +262,10 @@ export default class SquadCalc {
     loadMapSelector() {
 
         // Initiate Maps&Layers Dropdown
+        const selectorWidth = window.matchMedia("screen and (min-width: 124em) and (min-height: 68em)").matches ? "350px" : "250px";
         this.MAP_SELECTOR.select2();
         this.LAYER_SELECTOR.select2();
-        this.SERVER_SELECTOR.select2({ minimumResultsForSearch: Infinity, dropdownParent: $("#serverSelector"), allowClear: true });
+        this.SERVER_SELECTOR.select2({ minimumResultsForSearch: Infinity, dropdownParent: $("#serverSelector"), allowClear: true, width: selectorWidth });
         this.SERVER_SELECTOR.on("change", (event) => {
             const serverId = event.target.value;
             if (!serverId) {
@@ -473,7 +474,9 @@ export default class SquadCalc {
             clearTimeout(timeout);
             if (!response.ok) return;
             const data = await response.json();
-            const favoriteServers = (data.servers || []).filter(s => favoriteIds.has(String(s.id)));
+            const serverNormalizer = this.squadServersBrowser || new SquadServersBrowser();
+            const servers = serverNormalizer.normalizeServers(data.servers || []);
+            const favoriteServers = servers.filter(s => favoriteIds.has(String(s.id)));
             if (favoriteServers.length === 0) return;
             this.buildFavoriteServersDropdown(favoriteServers);
         } catch {
@@ -559,7 +562,9 @@ export default class SquadCalc {
                 weapon.projectileLifespan,
                 weapon.mod,
                 weapon.muzzleOffset,
-                weapon.barrelLength
+                weapon.barrelLength,
+                weapon.gravity,
+                weapon.geometry
             );
         });
         

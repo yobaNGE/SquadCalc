@@ -2,7 +2,7 @@ import { App } from "../app.js";
 import { WEAPONS } from "../data/weapons.js";
 
 export class Weapon {
-    constructor(name, deceleration, decelerationTime, gravityScale, minElevation, unit, logo, marker, type, angleType, elevationPrecision, shells = [], heightOffset = 0, angleOffset = 0, projectileLifespan = 100, mod = null, muzzleOffset = null, barrelLength = 0) {
+    constructor(name, deceleration, decelerationTime, gravityScale, minElevation, unit, logo, marker, type, angleType, elevationPrecision, shells = [], heightOffset = 0, angleOffset = 0, projectileLifespan = 100, mod = null, muzzleOffset = null, barrelLength = 0, gravity = null, geometry = {}) {
         this.name = name;
         //this.velocity = velocity;
         this.deceleration = deceleration;
@@ -28,7 +28,44 @@ export class Weapon {
         this.mod = mod;
         this.muzzleOffset = muzzleOffset;
         this.barrelLength = barrelLength;
+        this.gravity = gravity;
+        this.geometry = geometry || {};
+        this.launchOffsetMeters = this.geometry.launchOffsetMeters || null;
+        this.displayYawOffsetDeg = this.geometry.displayYawOffsetDeg || 0;
+        this.displayRotationSource = this.geometry.displayRotationSource || null;
+        this.displayCameraOffsetMeters = this.geometry.displayCameraOffsetMeters || null;
 
+    }
+
+    getGravity() {
+        return this.gravity || App.gravity;
+    }
+
+    getLaunchOffset() {
+        if (this.launchOffsetMeters) {
+            return {
+                lateral: this.launchOffsetMeters.lateral || 0,
+                forward: this.launchOffsetMeters.forward || 0,
+                vertical: this.launchOffsetMeters.vertical || 0,
+                referenceElevationDeg: this.launchOffsetMeters.referenceElevationDeg ?? null
+            };
+        }
+
+        if (this.muzzleOffset || this.barrelLength) {
+            return {
+                lateral: this.muzzleOffset?.x || 0,
+                forward: this.muzzleOffset?.y || this.barrelLength || 0,
+                vertical: this.muzzleOffset?.z || 0,
+                referenceElevationDeg: null
+            };
+        }
+
+        return null;
+    }
+
+    hasLaunchGeometry() {
+        const offset = this.getLaunchOffset();
+        return Boolean(offset && (offset.lateral !== 0 || offset.forward !== 0 || offset.vertical !== 0));
     }
 
 
@@ -87,7 +124,7 @@ export class Weapon {
 
         // If there's no deceleration (anything but UB32)
         if (this.decelerationDistance == 0) { 
-            return (this.velocity ** 2) / App.gravity / this.gravityScale; 
+            return (this.velocity ** 2) / this.getGravity() / this.gravityScale; 
         }
 
         // Calculate distance due to deceleration (only the velocity difference part)
@@ -96,7 +133,7 @@ export class Weapon {
 
         // Calculate distance at constant velocity like if the whole trajectory was at cruise speed
         const finalVelocity = this.velocity - this.deceleration * this.decelerationTime;
-        const cruiseDistance = (finalVelocity ** 2) / App.gravity / this.gravityScale;
+        const cruiseDistance = (finalVelocity ** 2) / this.getGravity() / this.gravityScale;
 
         // Add both parts of the distance
         return decelerationDistance + cruiseDistance;

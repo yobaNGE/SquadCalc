@@ -112,10 +112,18 @@ def write_png(encoded: np.ndarray, output_path: Path, output_format: str) -> Non
         if int(encoded.max()) > 255:
             raise ValueError(
                 "gray8 supports only 0..255 encoded values. "
-                "Use --format rgb16 or increase --precision-m."
+                "Use --format gray16/rgb16 or increase --precision-m."
             )
 
         image = Image.fromarray(encoded.astype(np.uint8), mode="L")
+        image.save(output_path, format="PNG", optimize=True, compress_level=9)
+        return
+
+    if output_format == "gray16":
+        if int(encoded.max()) > 65535:
+            raise ValueError("gray16 supports only 0..65535 encoded values. Increase --precision-m.")
+
+        image = Image.fromarray(encoded.astype(np.uint16))
         image.save(output_path, format="PNG", optimize=True, compress_level=9)
         return
 
@@ -221,7 +229,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--format",
-        choices=["auto", "gray8", "rgb16"],
+        choices=["auto", "gray8", "gray16", "rgb16"],
         default="auto",
         help="PNG encoding. Default: auto",
     )

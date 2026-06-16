@@ -242,7 +242,7 @@ export const squadWeaponMarker = squadMarker.extend({
         } = options;
 
         const weaponPos = this.getLatLng();
-        const G = App.gravity * App.activeWeapon.gravityScale;
+        const G = App.activeWeapon.getGravity() * App.activeWeapon.gravityScale;
         const estimatedMaxDistance = App.activeWeapon.getMaxDistance();
         const degreesPerMeter = this.map.gameToMapScale;
         const weaponHeight = this.map.heightmap.getHeight(weaponPos) + this.heightPadding;

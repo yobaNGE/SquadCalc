@@ -82,6 +82,21 @@ export default class SquadServersBrowser {
     }
 
 
+    normalizeServers(servers = []) {
+        servers.forEach(server => {
+            if (!server.mapName || !server.team1 || !server.team2) {
+                const modData = this.parseModLayer(server);
+                if (modData.mapName) {
+                    server.mapName = server.mapName || modData.mapName;
+                    server.team1 = server.team1 || modData.team1;
+                    server.team2 = server.team2 || modData.team2;
+                }
+            }
+        });
+        return servers;
+    }
+
+
     /**
      * Syncs the selected server's state:
      * - Updates `selectedLayer` if the server's current map changes
@@ -124,19 +139,7 @@ export default class SquadServersBrowser {
         try {
             const response = await fetch(`${process.env.API_URL}/get/servers`, { signal: controller.signal });
             const data = await response.json();
-            this.serversData = data.servers;
-
-            // Recover map/faction data for supported modded layers when the API omits it.
-            this.serversData.forEach(server => {
-                if (!server.mapName || !server.team1 || !server.team2) {
-                    const modData = this.parseModLayer(server);
-                    if (modData.mapName) {
-                        server.mapName = server.mapName || modData.mapName;
-                        server.team1 = server.team1 || modData.team1;
-                        server.team2 = server.team2 || modData.team2;
-                    }
-                }
-            });
+            this.serversData = this.normalizeServers(data.servers || []);
 
             this.fuse = new Fuse(this.serversData, {
                 includeScore: true,
@@ -351,6 +354,15 @@ export default class SquadServersBrowser {
     }
 
 
+    sanitize(str) {
+        return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+    }
+
+
     /**
      * Renders table rows for the given servers list.
      * @param {Array} servers
@@ -376,9 +388,9 @@ export default class SquadServersBrowser {
                 rows += `
                     <tr class="${isSelected} ${unavailable}" data-serverid="${server.id}">
                         <td class="favoriteCell">${favoriteStarHTML}</td>
-                        <td title="${App.sanitize(server.attributes.name)}"><div class="server-name">${App.sanitize(server.attributes.name)}</div></td>
+                        <td title="${this.sanitize(server.attributes.name)}"><div class="server-name">${this.sanitize(server.attributes.name)}</div></td>
                         <td class="mapdata">
-                            ${App.sanitize(server.attributes.details.map)}<br>
+                            ${this.sanitize(server.attributes.details.map)}<br>
                             ${nextLayer}<br>
                             <span class="nextMap">${i18next.t("playTime", { ns: "common" })}: ${playTime}</span>
                         </td>
