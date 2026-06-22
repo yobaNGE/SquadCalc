@@ -335,8 +335,9 @@ export var WEAPONS = [{
         mod: "SteelDivision",
         angleType: "low",
         elevationPrecision: 2,
-        heightOffset: 1.75,
-        angleOffset: 0,
+        heightOffset: 2.206,
+        // M109 HUD reads Camera pitch; Camera inherits +0.1 deg relative pitch from BP_GenericVehicleClosedTurret.
+        angleOffset: -0.1,
         shells: [{
             name: "default",
             minDistance: 0,
