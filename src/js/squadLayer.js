@@ -8,6 +8,7 @@ import { Hexagon } from "./libs/leaflet-hexagon.js";
 import { squadSpawnGroup } from "./squadSpawnGroup.js";
 import { squadCameraActor } from "./squadCameraActor.js";
 import { SquadVehicleSpawner } from "./squadVehicleSpawner.js";
+import { classifyStagingBox, mergeTouchingStagingBoxes } from "./stagingZoneGeometry.js";
 
 export default class SquadLayer {
 
@@ -141,7 +142,7 @@ export default class SquadLayer {
         this.createSpawners();
         this.createTeamSpawns();
         this.createCameraActors();
-        //this.createStagingZones();
+        this.createStagingZones();
         //this.createTeamSpawnsPoints();
     }
 
@@ -611,34 +612,20 @@ export default class SquadLayer {
 
     /**
      * Create staging zones from mapAssets.stagingZones
-     * Draws a box for every object of each zone (center + boxExtent + rotation)
+     * Draws each box as an independent top-down primitive.
      * @param {Array} this.layerData.mapAssets.stagingZones - Array of staging zones
      */
     createStagingZones() {
         if (!this.layerData.mapAssets.stagingZones) return;
 
         this.layerData.mapAssets.stagingZones.forEach((zone) => {
-            zone.objects.forEach((box) => {
-                if (!box.isBox) return;
+            const teamColor = { 1: "MediumBlue", 2: "firebrick" }[zone.teamid] || "white";
+            const boxes = zone.objects.filter(box => box.isBox && classifyStagingBox(box) !== "horizontal");
 
-                const [location_y, location_x] = this.convertToLatLng(box.location_x, box.location_y);
-
-                const radiusX = (box.boxExtent.extent_x / 100) * -this.map.gameToMapScale;
-                const radiusY = (box.boxExtent.extent_y / 100) * -this.map.gameToMapScale;
-
-                const bounds = [
-                    [location_y + radiusY, location_x + radiusX],
-                    [location_y - radiusY, location_x - radiusX]
-                ];
-
-                const stagingZone = new Rectangle(bounds, {
-                    color: "white",
-                    weight: 4,
-                    fillOpacity: 0,
-                }).addTo(this.activeLayerMarkers);
-
-                if (box.boxExtent.rotation_z != 0) this.rotateRectangle(stagingZone, box.boxExtent.rotation_z);
-
+            mergeTouchingStagingBoxes(boxes).forEach((primitive) => {
+                const latLngs = primitive.rings.map(ring => ring.map(([x, y]) => this.convertToLatLng(x, y)));
+                const stagingZone = new Polygon(latLngs, { color: teamColor, weight: 2, opacity: 0.7, fillColor: teamColor, fillOpacity: 0.04, dashArray: "6 5" });
+                stagingZone.addTo(this.activeLayerMarkers);
                 this.stagingZones.push(stagingZone);
             });
         });
